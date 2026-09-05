@@ -181,3 +181,7 @@ fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
 - top k samples vote 
 - predict numeric label
 - decode numeric label into string
+
+### model evalutions 
+- accuracy : correct test predictions / total test samples 
+![accuracy report](image-6.png)

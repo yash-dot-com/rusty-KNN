@@ -242,13 +242,42 @@ fn predict(neighbours: &[Neighbour], k: usize) -> usize {
     best_label
 }
 
+fn evaluate(
+    test_data: &[ScaledSample],
+    train_data: &[ScaledSample],
+    k: usize
+) -> f64 {
+    let mut correct = 0;
+
+    // calculate distance for every sample in test_data
+    // note this is already scaled test data 
+    for test_sample in test_data {
+        let mut neighbours = find_neighbours(&test_sample.features, train_data);
+        neighbours.sort_by(|a,b| {
+            a.distance.partial_cmp(&b.distance).unwrap()
+        });
+
+        let _ = &neighbours[..k];
+        let predicted_numeric_label = predict(&neighbours, k);
+
+        if predicted_numeric_label == test_sample.label {
+            correct += 1;
+        }
+    }
+    // find out top k nearest neighbours 
+    // find out model prediction 
+    // compare with original value from test_data slice 
+    // calculate accuracy
+    correct as f64 / test_data.len() as f64
+}
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
     let mut dataset: Vec<Sample> = Vec::new();
 
     // random seed 
-    let mut rng = StdRng::seed_from_u64(42);
+    let mut rng = StdRng::seed_from_u64(84);
     dataset.shuffle(&mut rng);
 
     match File::open(path) {
@@ -285,7 +314,7 @@ fn main() {
                         };
 
                         // sample struct needs to implement Debug macro to be printed in dbg mode
-                        println!("{:?}", sample);
+                        // println!("{:?}", sample);
 
                         // pushing each sample in dataset vector
                         dataset.push(sample);
@@ -364,7 +393,7 @@ fn main() {
     // println!("{}", k); <- debug statement
 
     // top k nearest neighbours 
-    let nearest = &neighbours_distances[..k];
+    let _ = &neighbours_distances[..k];
 
     // prediction 
     // mode of nearest vector
@@ -373,4 +402,10 @@ fn main() {
     let predicted_string_label = decode_label(predicted_numeric_label);
 
     println!("Predicted Label for {:?} features is {}.", user_features, predicted_string_label);
+
+    // accuracy 
+    let k = 5;
+    let accuracy = evaluate(&scaled_test, &scaled_train, k);
+    println!("k : {}", k);
+    println!("Accuracy = {:.2}%", accuracy * 100.0);
 }
