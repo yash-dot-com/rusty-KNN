@@ -1,9 +1,14 @@
 use std::fs::File;
 use std::io::{self, BufRead};
-use std::path::Path;
+
+#[derive(Debug)]
+struct Sample {
+    features: [f64; 4],
+    label: String,
+}
 
 fn main() {
-    let path = "./data/iris.csv";
+    let path: &str = "./data/iris.csv";
 
     match File::open(path) {
         Ok(file) => {
@@ -20,10 +25,23 @@ fn main() {
                         let petal_width: f64 = fields[3].trim().parse().unwrap();
                         let species: &str = fields[4].trim();
 
-                        println!(
-                            "Sepal: {}-{}, Petal: {}-{}, Species: {}",
-                            sepal_length, sepal_width, petal_length, petal_width, species
-                        )
+                        // println!(
+                        //     "Sepal: {}-{}, Petal: {}-{}, Species: {}",
+                        //     sepal_length, sepal_width, petal_length, petal_width, species
+                        // )
+
+                        let sample = Sample {
+                            features: [
+                                sepal_length,
+                                sepal_width,
+                                petal_length,
+                                petal_width,
+                            ], 
+                            label: species.to_string(),
+                        };
+
+                        // sample struct needs to implement Debug macro to be printed in dbg mode
+                        println!("{:?}", sample);
                     }
                     Err(e) => {
                         println!("Error reading line: {}", e);
