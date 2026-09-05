@@ -1,9 +1,47 @@
 use std::fs::File;
-use std::io::{self, BufRead};
+
+// for IO 
+use std::io::{self, BufRead, Write};
+
 // for seeded randomness
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
+
+// get user input 
+fn get_user_input() -> [f64; 4] {
+    let mut features = [0.0; 4];
+
+    let feature_names = [
+        "Sepal length",
+        "Sepal width",
+        "Petal length",
+        "Petal width",
+    ];
+
+    for i in 0..4 {
+        loop {
+            print!("Enter {} : ", feature_names[i]);
+            io::stdout().flush().unwrap();
+
+            let mut input = String::new();
+            io::stdin().read_line(&mut input).unwrap();
+
+            match input.trim().parse::<f64>() {
+                Ok(value) => {
+                    features[i] = value;
+                    break;
+                }
+                Err(_) => {
+                    println!("Please enter a valid number...")
+                }
+            }
+
+        }
+    }
+
+    features 
+}
 
 #[derive(Debug)]
 struct Sample {
@@ -209,9 +247,17 @@ fn main() {
     // debug
     // dbg!(scaled_train);
     // dbg!(scaled_test);
-    let a: [f64; 4] = [1.0,2.0,3.0,4.0];
-    let b: [f64; 4] = [4.0,3.0,2.0,1.0];
-    let distance = euclidean_distance(&a, &b);
+
+    // debug <- only to check that euclidean distance formula works
+    // let a: [f64; 4] = [1.0,2.0,3.0,4.0];
+    // let b: [f64; 4] = [4.0,3.0,2.0,1.0];
+    // let distance = euclidean_distance(&a, &b);
     // dbg!(distance);
-    
+
+
+    // get user inputs 
+    let user_features = get_user_input();
+
+    println!("User input : {:?}", user_features);
+
 }

@@ -173,3 +173,11 @@ fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
 - perform the voting and give back label in numeric form
 - return / print the label after converting it from numeric to string format using decode_label() function.
 
+### final prediction step 
+- get user's data point 
+- scale it using our learned means & std deviations
+- find out distance between training points & user's point
+- sort the top k smallest distance calculated 
+- top k samples vote 
+- predict numeric label
+- decode numeric label into string
