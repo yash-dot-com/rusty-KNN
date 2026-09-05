@@ -132,3 +132,30 @@ fn calculate_mean(data: &[Sample]) -> [f64; 4] {
     ]
 }
 ```
+
+### calculate std deviaton formula & its code expression 
+![std dev math expression](image-3.png)
+- xij : feature j of sample i 
+- muj : mean of feature j 
+- n : no of training samples
+- sigmaj : standard deviation of feature j 
+```rs
+fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
+  let mut squared_diffs = [0.0; 4];
+
+  for item in data {
+    for j in 0..4 {
+      let diff = items.features[j] - means[j];
+      squared_diffs[i] += diff * diff;
+    }
+  }
+
+  let n = data.len() as f64;
+
+  for j in 0..4 {
+    squared_diffs[j] = (squared_diffs[j] / n).sqrt();
+  }
+
+  squared_diffs
+}
+```

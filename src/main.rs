@@ -55,9 +55,24 @@ fn calculate_mean(data: &[Sample]) -> [f64; 4] {
     ]
 }
 
-// fn calculate_std_dev(data: &[Sample], mean: ) -> [f64; 4] {
+fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
+  let mut squared_diffs = [0.0; 4];
 
-// }
+  for item in data {
+    for j in 0..4 {
+      let diff = item.features[j] - means[j];
+      squared_diffs[j] += diff * diff;
+    }
+  }
+
+  let n = data.len() as f64;
+
+  for j in 0..4 {
+    squared_diffs[j] = (squared_diffs[j] / n).sqrt();
+  }
+
+  squared_diffs
+}
 
 fn main() {
     let path: &str = "./data/iris.csv";
@@ -136,9 +151,10 @@ fn main() {
     // calculating mean & std. dev for training dataset
     // means of all features as array 
     let means = calculate_mean(train_data);
-    // let std_dev = calculate_std_dev(train_data, &means);
+    let std_dev = calculate_std_dev(train_data, &means);
 
     println!("mean of features : {:?}", means);
+    println!("std deviation of features : {:?}", std_dev);
     
     // scaled train, scaled test 
     // let scaled_train = scale_data(train_data, &means, &std_dev);
