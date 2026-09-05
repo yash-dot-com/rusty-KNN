@@ -195,7 +195,10 @@ fn main() {
     let scaled_train = scale_data(train_data, &means, &std_dev);
     let scaled_test = scale_data(test_data, &means, &std_dev);
 
-    dbg!(scaled_train);
-    dbg!(scaled_test);
+    // debug
+    // dbg!(scaled_train);
+    // dbg!(scaled_test);
+
+    
 
 }

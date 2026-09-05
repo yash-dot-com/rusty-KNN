@@ -163,3 +163,13 @@ fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
 ### scaling data points using mean & std dev
 ![scaling maths expression](image-4.png)
 - zscore scaling!
+
+### euclidean distance calculation
+![euclidean distance mathematical expression](image-5.png)
+- basically we will get an input point, we first scale it using our learned means & std-devs.
+- then we calculate the distance of sample points from this point
+- then arrange the distances in ascending order 
+- choose top k smallest distances (maximum feature similarity)
+- perform the voting and give back label in numeric form
+- return / print the label after converting it from numeric to string format using decode_label() function.
+
