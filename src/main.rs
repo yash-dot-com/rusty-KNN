@@ -4,7 +4,27 @@ use std::io::{self, BufRead};
 #[derive(Debug)]
 struct Sample {
     features: [f64; 4],
-    label: String,
+    label: usize,
+}
+
+// encodes string label into numeric form
+fn encode_label(label: &str) -> usize {
+    match label {
+        "Iris-setosa" => 0,
+        "Iris-versicolor" => 1,
+        "Iris-virginica" => 2,
+        _ => panic!("Unknown species : {}", label),
+    }
+}
+
+// decode numeric labels into string form
+fn decode_label(label: usize) -> &'static str {
+    match label {
+        0 => "Iris-setosa",
+        1 => "Iris-versicolor",
+        2 => "Iris-virginica",
+        _ => panic!("Unknown Label : {}", label),
+    }
 }
 
 fn main() {
@@ -32,6 +52,9 @@ fn main() {
                         //     sepal_length, sepal_width, petal_length, petal_width, species
                         // )
 
+                        // encoding the labels 
+                        let label = encode_label(species);
+
                         let sample = Sample {
                             features: [
                                 sepal_length,
@@ -39,7 +62,7 @@ fn main() {
                                 petal_length,
                                 petal_width,
                             ], 
-                            label: species.to_string(),
+                            label,
                         };
 
                         // sample struct needs to implement Debug macro to be printed in dbg mode
@@ -63,4 +86,9 @@ fn main() {
     // println!("{:?}", dataset); <- only for debugging, 
 
     println!("Loaded {} samples", dataset.len());
+
+    // debug only 
+    // checking the encode & decode fns 
+    // dbg!(encode_label("Iris-virginica"));
+    // dbg!(decode_label(0));
 }
