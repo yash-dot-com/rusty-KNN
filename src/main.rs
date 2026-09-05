@@ -10,6 +10,8 @@ struct Sample {
 fn main() {
     let path: &str = "./data/iris.csv";
 
+    let mut dataset: Vec<Sample> = Vec::new();
+
     match File::open(path) {
         Ok(file) => {
             let reader = io::BufReader::new(file);
@@ -42,6 +44,9 @@ fn main() {
 
                         // sample struct needs to implement Debug macro to be printed in dbg mode
                         println!("{:?}", sample);
+
+                        // pushing each sample in dataset vector
+                        dataset.push(sample);
                     }
                     Err(e) => {
                         println!("Error reading line: {}", e);
@@ -53,4 +58,9 @@ fn main() {
             println!("Error opening file '{}': {}", path, e);
         }
     }
+
+    // checking if the samples are pushed into vector
+    // println!("{:?}", dataset); <- only for debugging, 
+
+    println!("Loaded {} samples", dataset.len());
 }
