@@ -109,6 +109,17 @@ fn scale_data(
     scaled
 }
 
+fn euclidean_distance(a: &[f64; 4], b: &[f64; 4]) -> f64 {
+    let mut sum = 0.0;
+
+    for j in 0..4 {
+        let diff = a[j] - b[j];
+        sum += diff * diff;
+    }
+
+    sum.sqrt()
+}
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
@@ -198,7 +209,9 @@ fn main() {
     // debug
     // dbg!(scaled_train);
     // dbg!(scaled_test);
-
+    let a: [f64; 4] = [1.0,2.0,3.0,4.0];
+    let b: [f64; 4] = [4.0,3.0,2.0,1.0];
+    let distance = euclidean_distance(&a, &b);
+    // dbg!(distance);
     
-
 }
