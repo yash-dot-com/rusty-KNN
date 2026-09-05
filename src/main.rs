@@ -1,5 +1,9 @@
 use std::fs::File;
 use std::io::{self, BufRead};
+// for seeded randomness
+use rand::rngs::StdRng;
+use rand::seq::SliceRandom;
+use rand::SeedableRng;
 
 #[derive(Debug)]
 struct Sample {
@@ -31,6 +35,10 @@ fn main() {
     let path: &str = "./data/iris.csv";
 
     let mut dataset: Vec<Sample> = Vec::new();
+
+    // random seed 
+    let mut rng = StdRng::seed_from_u64(42);
+    dataset.shuffle(&mut rng);
 
     match File::open(path) {
         Ok(file) => {
@@ -91,4 +99,10 @@ fn main() {
     // checking the encode & decode fns 
     // dbg!(encode_label("Iris-virginica"));
     // dbg!(decode_label(0));
+
+    // splitting the dataset into training & testing 
+    let split_index = (dataset.len() as f64 * 0.8) as usize;
+    let train_data = &dataset[..split_index];
+    let test_data = &dataset[split_index..];
+    
 }
