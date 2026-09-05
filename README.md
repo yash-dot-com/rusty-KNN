@@ -1,0 +1,77 @@
+### k nearest neighbours
+- is a supervised machine learning algorithm
+- KNN is based on simple assumption, similar inputs -> tend to have similar outputs
+- nearby points in feature space -> likely similar labels 
+- KNN is a lazy learner 
+- it just saves the scaled training data points during training.
+- when we predict input comes in, it calculates the distances & performs the voting.
+
+
+### iris dataset 
+- has 150 rows 
+- 4 features 
+- 1 target -> species class 
+- 3 species classes -> virginica, setosa & versicolor
+- target is therefore y belongs to {0,1,2}
+- features x = [sepal length, sepal width, petal length, petal width]
+
+### implementation plan 
+- load the dataset
+- split the dataset into 80:20 
+- scale the features to avoid one feature to dominantly affect the distance between 2 similar points
+- create KNN model 
+- train the model 
+- predict using the model
+- calculate accuracy 
+- calculate confusion matrix 
+
+### simplified plan 
+- 1. data ingestion 
+- 2. distance calculation 
+- 3. sort top k 
+- 4. take k 
+- 5. vote 
+
+### maths & theory to understand first
+- iris always have 4 features, so we can use array of type [f62; 4] 
+- distance calculation between 2 points x & z is done as 
+​​![original distance formula](image.png)
+- this is just multi-dimensional euclidean distance formula 
+- instead of calculating the square root of the distance we can just compare raw distance. 
+- because if d1 < d2 then d1^2 < d2^2
+- so we can just compare 
+![updated distance formula](image-1.png)
+
+### scaling data 
+- why scale because 
+- 1. age 20-60
+- 2. income 20,000 - 100,000
+- 3. visits 1 - 20
+- euclidean distance treats every dimension numerically 
+- so the income becomes a dominating factor while calculating the whole distance and may lead to put similar points further away due to inflated distance 
+
+### scaling using standardization 
+- for each feature we will calculate 
+- 1. mean of the feature
+- 2. standard deviatoin 
+- and calculate
+- scaled value = original - mean / deviation 
+
+### which data needs to be scaled
+- we need to scale training data 
+- we also need to scale the input in the similar fashion using the already calculated means & standard deviation of each feature 
+- we don't recalculate mean or std. deviation 
+- also we scaled the training data using the mean & std. dev. calculated from 80% of data and therefore remaining testing data also needs to be scaled with the same mean & std. dev.
+
+### pipeline 
+- get training data
+- calculate mean 
+- calculate std. deviations 
+- scale training data
+- save means & std. deviation 
+- new flower input arrives
+- scale using same means & std. deviation 
+- calculate distance of input from other points 
+- choose the points by taking K smallest distance  
+- return the most repeated class from these as prediction 
+
