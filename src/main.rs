@@ -158,6 +158,49 @@ fn euclidean_distance(a: &[f64; 4], b: &[f64; 4]) -> f64 {
     sum.sqrt()
 }
 
+// fn to scale input data
+// tbh the scale_data() function should handle this flawlessly but it takes slice of vector 
+// we have [f64; 4] here
+fn scale_user_input(
+    features: &[f64; 4],
+    means: &[f64; 4],
+    stds: &[f64; 4]
+) -> [f64; 4] {
+    let mut scaled = [0.0; 4];
+
+    for j in 0..4 {
+        scaled[j] = (features[j] - means[j]) / stds[j];
+    }
+
+    scaled
+}
+
+// neighbour struct 
+#[derive(Debug)]
+struct Neighbour {
+    distance: f64,
+    label: usize,
+}
+
+// find distance between query point & neighbour
+fn find_neighbours(
+    query: &[f64; 4],
+    train_data: &[ScaledSample],
+) -> Vec<Neighbour> {
+    let mut neighbours = Vec::with_capacity(train_data.len());
+
+    for sample in train_data {
+        let distance = euclidean_distance(query, &sample.features);
+
+        neighbours.push(Neighbour{
+            distance,
+            label: sample.label,
+        });
+    }
+
+    neighbours
+}
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
@@ -257,7 +300,25 @@ fn main() {
 
     // get user inputs 
     let user_features = get_user_input();
-
     println!("User input : {:?}", user_features);
+
+    // scale user inputs 
+    let scaled_user_features = scale_user_input(&user_features, &means, &std_dev);
+    println!("Scaled User input : {:?} ", scaled_user_features);
+
+    // calculate distance of user's input from all the points 
+    // find neighbours basically 
+    let mut neighbours_distances = find_neighbours(&user_features, &scaled_train);
+    // dbg!(neighbours_distances); <- for debug 
+
+    // sorting neighbours based on distances, ascending order 
+    neighbours_distances.sort_by(|a, b| {
+        a.distance.partial_cmp(&b.distance)
+        .unwrap()
+    });
+
+    // take top k value from user 
+    // max k value can be equal to number of training samples 
+    let k = get_k(scaled_train.len());
 
 }
