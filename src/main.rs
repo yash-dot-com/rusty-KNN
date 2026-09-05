@@ -74,6 +74,41 @@ fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
   squared_diffs
 }
 
+// scaled samples struct <- tbh not required 
+#[derive(Debug)]
+struct ScaledSample {
+    features: [f64; 4],
+    label: usize,
+}
+
+// function to scale data 
+// basically we need to iterate over each sample, 
+// perform the og - mean / stddev calculation for 4 features in each sample 
+// return a vector of scaled values
+fn scale_data(
+    data: &[Sample],
+    means: &[f64; 4],
+    stds: &[f64; 4],
+) -> Vec<ScaledSample> {
+    let mut scaled = Vec::with_capacity(data.len());
+
+    for item in data {
+        let mut features = [0.0; 4];
+
+        for j in 0..4 {
+            // this line directly corresponds to x_dash_ij = x_ij - mean_j / stddev_j
+            features[j] = (item.features[j] - means[j]) / stds[j];
+        }
+
+        scaled.push(ScaledSample{
+            features,
+            label: item.label,
+        });
+    }
+
+    scaled
+}
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
@@ -157,7 +192,10 @@ fn main() {
     println!("std deviation of features : {:?}", std_dev);
     
     // scaled train, scaled test 
-    // let scaled_train = scale_data(train_data, &means, &std_dev);
-    // let scaled_test = scale_data(test_data, &means, &std_dev);
+    let scaled_train = scale_data(train_data, &means, &std_dev);
+    let scaled_test = scale_data(test_data, &means, &std_dev);
+
+    dbg!(scaled_train);
+    dbg!(scaled_test);
 
 }

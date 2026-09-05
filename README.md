@@ -159,3 +159,7 @@ fn calculate_std_dev(data: &[Sample], means: &[f64; 4]) -> [f64; 4] {
   squared_diffs
 }
 ```
+
+### scaling data points using mean & std dev
+![scaling maths expression](image-4.png)
+- zscore scaling!
