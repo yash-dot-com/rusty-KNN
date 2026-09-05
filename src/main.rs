@@ -31,6 +31,34 @@ fn decode_label(label: usize) -> &'static str {
     }
 }
 
+// function to calculate mean 
+// taking immutable reference to slice of Sample vector
+fn calculate_mean(data: &[Sample]) -> [f64; 4] {
+    let length = data.len() as f64;
+    let mut feature_1_sum = 0.0;
+    let mut feature_2_sum = 0.0;
+    let mut feature_3_sum = 0.0;
+    let mut feature_4_sum = 0.0;
+
+    for item in data {
+        feature_1_sum += item.features[0];
+        feature_2_sum += item.features[1];
+        feature_3_sum += item.features[2];
+        feature_4_sum += item.features[3];
+    }
+
+    [
+        feature_1_sum / length,
+        feature_2_sum / length,
+        feature_3_sum / length,
+        feature_4_sum / length,
+    ]
+}
+
+// fn calculate_std_dev(data: &[Sample], mean: ) -> [f64; 4] {
+
+// }
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
@@ -104,5 +132,16 @@ fn main() {
     let split_index = (dataset.len() as f64 * 0.8) as usize;
     let train_data = &dataset[..split_index];
     let test_data = &dataset[split_index..];
+
+    // calculating mean & std. dev for training dataset
+    // means of all features as array 
+    let means = calculate_mean(train_data);
+    // let std_dev = calculate_std_dev(train_data, &means);
+
+    println!("mean of features : {:?}", means);
     
+    // scaled train, scaled test 
+    // let scaled_train = scale_data(train_data, &means, &std_dev);
+    // let scaled_test = scale_data(test_data, &means, &std_dev);
+
 }

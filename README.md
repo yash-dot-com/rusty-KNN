@@ -75,3 +75,60 @@
 - choose the points by taking K smallest distance  
 - return the most repeated class from these as prediction 
 
+### dataset in memory 
+```js
+dataset
+┌─────────────────────────────────────────────┐
+│ S │ S │ S │ S | S │ ... │ S │ S │ S │ S │ S │
+└─────────────────────────────────────────────┘
+  └──────────────┘       └───────────────┘
+    train_data              test_data
+     borrow                   borrow
+```
+
+### idiomatic mathematical expressions
+![summation expression](image-2.png) 
+- idiomatic code 
+```rs
+fn calculate_mean(data: &[Sample]) -> [f64; 4] {
+    let mut sums = [0.0; 4];
+
+    for item in data {
+        for j in 0..4 {
+            sums[j] += item.features[j];
+        }
+    }
+
+    let length = data.len() as f64;
+
+    for j in 0..4 {
+        sums[j] /= length;
+    }
+
+    sums
+}
+```
+- junior engg code 
+```rs
+fn calculate_mean(data: &[Sample]) -> [f64; 4] {
+    let length = data.len() as f64;
+    let mut feature_1_sum = 0.0;
+    let mut feature_2_sum = 0.0;
+    let mut feature_3_sum = 0.0;
+    let mut feature_4_sum = 0.0;
+
+    for item in data {
+        feature_1_sum += item.features[0];
+        feature_2_sum += item.features[1];
+        feature_3_sum += item.features[2];
+        feature_4_sum += item.features[3];
+    }
+
+    [
+        feature_1_sum / length,
+        feature_2_sum / length,
+        feature_3_sum / length,
+        feature_4_sum / length,
+    ]
+}
+```
