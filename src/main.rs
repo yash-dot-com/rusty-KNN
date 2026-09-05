@@ -201,6 +201,47 @@ fn find_neighbours(
     neighbours
 }
 
+// get top k value from user 
+fn get_k(max_k: usize) -> usize {
+    // infinite loop until user puts a valid data
+    loop {
+        print!("Enter k : ");
+        io::stdout().flush().unwrap();
+
+        let mut input = String::new();
+        io::stdin().read_line(&mut input).unwrap();
+
+        match input.trim().parse::<usize>() {
+            Ok(k) if k > 0 && k <= max_k => {
+                return k;
+            }
+            _ => {
+                println!("K must be between 1 & {}", max_k);
+            }
+        }
+    }
+}
+
+fn predict(neighbours: &[Neighbour], k: usize) -> usize {
+    let mut counts = [0usize; 3];
+
+    for neighbour in neighbours.iter().take(k) {
+        counts[neighbour.label] += 1;
+    }
+
+    let mut best_label = 0;
+    let mut best_count = counts[0];
+
+    for label in 1..3 {
+        if counts[label] > best_count {
+            best_count = counts[label];
+            best_label = label;
+        }
+    }
+
+    best_label
+}
+
 fn main() {
     let path: &str = "./data/iris.csv";
 
@@ -320,5 +361,16 @@ fn main() {
     // take top k value from user 
     // max k value can be equal to number of training samples 
     let k = get_k(scaled_train.len());
+    // println!("{}", k); <- debug statement
 
+    // top k nearest neighbours 
+    let nearest = &neighbours_distances[..k];
+
+    // prediction 
+    // mode of nearest vector
+    // return the most repeated label as prediction 
+    let predicted_numeric_label = predict(&neighbours_distances, k);
+    let predicted_string_label = decode_label(predicted_numeric_label);
+
+    println!("Predicted Label for {:?} features is {}.", user_features, predicted_string_label);
 }
